@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+<style>
+
+    h1{
+        font-size: 15px;
+    }
+
+    .profile-container{
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+        margin-left: 5px;
+    }
+
+    .profile-pic{
+        vertical-align: middle;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: contain;
+    }
+
+    .user-info{
+        font-size: 15px;
+    }
+
+</style>
+
+<h1>Profil użytkownika {{ user.username }}</h1>
+<hr>
+
+<div class="profile-container">
+
+    <div>
+        <br>
+        <img class="profile-pic" title="Zdjęcie profilowe" src="{{ user.profile.image.url }}" alt="Profile pictrue">
+        <small>Nazwa użytkownika: <p class="user-info">{{ user.username }}</p></small>
+        <small>Email: <p class="user-info">{{ user.email }}</p></small>
+        <small>Bio: <p class="user-info">{{ user.profile.bio }}</p></small>
+        {% if user.id == request.user.id %}
+        <a href="{% url 'update-user' %}">Edytuj</a>
+        {% endif %}
+    </div>
+
+    <div>
+        {% if recipes.count > 0 %}
+            <div>
+                <p>Przepisy ({{ recipes.count }}):</p>
+                {% for recipe in recipes %}
+                    <p>@{{ recipe.host.username }} {% if request.user.id == recipe.host.id %}-- <a href="{% url 'update-recipe' recipe.id %}">Edytuj</a><a href="{% url 'delete-recipe' recipe.id %}">  Usuń</a></p>{% endif %}
+                    <h2>{{ recipe.id }} -- <a href="{% url 'recipe' recipe.id %}">{{ recipe.title }}</a></h2>
+                    <p>{{ recipe.meal }}</p>
+                    <hr>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div>
+                <p>Nie ma żadnych przepisów</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div>
+        {% if comments.count > 0 %}
+            <div>
+                <p>Komentarze ({{ comments.count }}):</p>
+                {% for comment in comments %}
+                <div>
+                    <small>@{{ comment.user }}  {{ comment.created | timesince }} - <a href="{% url 'recipe' comment.recipe.id %}">{{ comment.recipe }}</a></small>
+                    <p>{{ comment.body }}</p>
+                </div>
+                <hr>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div>
+                <p>Nie ma żadnych komentarzy</p>
+            </div>
+        {% endif %}
+    </div>
+
+
+</div>
+
+{% endblock %}

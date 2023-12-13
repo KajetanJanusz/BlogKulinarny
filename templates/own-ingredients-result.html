@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>To możesz wykonac</h1>
+
+{% for recipe in recipes_output %}
+    <a href="{% url 'recipe' recipe.id %}">{{ recipe.title }}</a>
+{% endfor %}
+
+{% endblock content %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if page == 'login' %}
+    <div>
+        <form method="POST" action="">
+            {% csrf_token %}
+
+            <label>Nazwa użytkownika:</label>
+            <input type="text" name="username" placeholder="Wpisz nazwę" />
+            
+            <label>Hasło:</label>
+            <input type="password" name="password" placeholder="Wpisz hasło" />
+
+            <input type="submit" value="Zaloguj"/>
+        </form>
+    </div>
+{% else %}
+    <div>
+        <form method="POST" action="">
+            {% csrf_token %}
+            {{ form.as_p}}
+            <input type="submit" value="Zarejestruj się"/>
+        </form>
+    </div>
+{% endif %}
+
+
+{% endblock %}

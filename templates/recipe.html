@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .home-container{
+        display: grid;
+        grid-template-columns: 3fr 1fr;
+    }
+
+    .dish-pic{
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+    }
+
+    h1{
+        font-size: 35px;
+    }
+
+    h2{
+        text-transform: capitalize;
+    }
+
+
+</style>
+
+    <div class="home-container">
+
+
+        <div>
+            <div>
+            <h1>{{ recipe.title }}</h1>
+            <small><a href="{% url 'shopping-list' recipe.id %}">Pobierz listę zakupów</a></small>
+            <br>
+
+            <strong>Składniki:</strong>
+            {% for ingredient in ingredients %}</p>
+                <p>{{ ingredient.product }}: {{ ingredient.weight }} {{ ingredient.product.unit }}ów</p>
+            {% endfor %}
+            <br>
+            <strong class="description">Przygotowanie:</strong>
+            <p class="description-1">{{ recipe.description }}</p>
+            </div>
+            &nbsp;
+            <div>
+                <hr>
+                <h3>Opinie</h3>
+                
+                {% if comments.count > 0 %}
+                {% for comment in comments %}
+                <div class="comment-wrapper">
+                        <small><a href="{% url 'profile' comment.user.username %}">{{ comment.user }}</a>  
+                            {{ comment.created | timesince }}</small>{% if request.user == comment.user %}<a href="{% url 'delete-comment' comment.id %}">Usuń</a><a href="{% url 'update-comment' comment.id %}">Edytuj</a>{% endif %}
+                        <p>{{ comment.body }}</p>
+                        {% if comment.rating != None %}
+                            <p>Ocena: {{ comment.rating }}/5</p>
+                        {% endif %}
+                    {% if comment.image.url != Null %}
+                        <img class="dish-pic" src="{{ comment.image.url }}" alt="Dish pictrue">
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>Brak komentarzy. Napisz jako pierwszy!</p>
+                {% endif %}
+            </div>
+            <hr>
+            <div>&nbsp;</div>
+            {% if request.user.is_authenticated %}
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" value="Dodaj">
+                </form>
+            {% endif %}
+            &nbsp;
+            <hr>
+            <h1>Podobne dania</h1>
+            {% for recipe_all in recipes_all %}
+                {% if recipe_all.meal == recipe.meal %}   
+                    {% if recipe_all.id != recipe.id %}    
+                        <div>
+                            <h2><a href="{% url 'recipe' recipe_all.id %}">{{ recipe_all.title }}</a></h2>
+                            <p>{{ recipe_all.meal }}</p>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div>
+            <h3>Komentujący</h3>
+            {% for participant in participants %}
+            <p>@{{ participant.username }}</p>
+            {% endfor %}
+        </div>
+
+    </div>
+
+{% endblock content %}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+
+{% load static %}
+
+<style>
+
+    header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin: 8px;
+        padding: 8px;
+    }
+
+    .links-container{
+        margin-right: 50px;
+    }
+
+    .links-container div {
+        display: inline-block;
+        padding-left: 20px;        
+    }
+</style>
+
+<head>
+    <title>Gotować każdy może</title>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/static/styles/styles.css">
+    <link rel="shortcut icon" href="assets/favicon.ico" type="image/x-icon" />
+</head>
+
+<body>
+    <header>
+    <div style="width: 400px;">
+        <h1 class="title"><a href="{% url 'home' %}">Gotować każdy może</a></h1>
+        <form method="GET" action="{% url 'home' %}">
+            <input type="text" name="search" placeholder="Wyszukaj..."/>
+        </form>
+    </div>
+    <div class="links-container">
+        {% if request.user.is_authenticated %}
+        <div>
+            <a href="{% url 'logout' %}">Wyloguj się &nbsp;</a>
+        </div>
+        <div>
+            <a href="{% url 'profile' request.user.username %}">Profil</a>
+        </div>
+        {% else %}
+        <div>
+            <a href="{% url 'login' %}">Zaloguj się</a>
+        </div>
+        <div>
+            <a href="{% url 'register' %}">Zarejestruj się</a>
+        </div>
+        {% endif %}
+        <div>
+            <a href="{% url 'own-ingredients' %}">Przepisy z mojej lodówki</a>
+        </div>
+        <div>
+            <a href="{% url 'conversion-factor' %}">Przelicznik</a>
+        </div>
+    </div>
+    </header>
+
+    <hr>
+
+    
+
+
+    <div class="content-container">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% block content %}
+
+        {% endblock %}
+    </div>
+</body>

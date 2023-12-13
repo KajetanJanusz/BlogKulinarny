@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .home-container{
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+    }
+    .profile-pic{
+        vertical-align: middle;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: contain;
+        margin-top: 5px;
+        margin-left: 5px;
+        border-style: solid;
+        border-color: darkcyan;
+        border-width: 1px;
+    }
+    .recipe-container{
+        display: grid;
+        grid-template-columns: 1fr 5fr;
+    }
+
+    .headers-container{
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+        font-size: 25px;
+    }
+
+    .user-container{
+        display: grid;
+        grid-template-columns: 4fr 4fr;
+    }
+
+    .recipe-container{
+        display: grid;
+        grid-template-columns: 1fr 2fr 4fr;
+        margin: 10px 10px 0px 10px;
+    }
+
+    .recipe-main-container{
+        border: 1px;
+        border-style: solid;
+        border-color: darkcyan;
+        background-color: rgb(47, 41, 41);
+        border-radius: 25px;
+        transition: 1s;
+        margin-right: 25px;
+        width: 95%;
+    }
+
+    .recipe-main-container:hover{
+        transform: scale(1.05);
+        cursor: pointer;
+    }
+    
+    .recipe{
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .recipe-author{
+        margin-top: 11px;
+        margin-left: 10px;
+    }
+
+    .recipe-time{
+        margin-top: 9px;
+        margin-right: 5px;
+        text-align: right;
+    }
+
+    .recipe-title{
+        font-size: 20px;
+        text-transform: capitalize;
+    }
+
+    .meal{
+        font-size: 15px;
+    }
+
+    .recipes{
+
+        column-count: auto;
+    }
+
+    .value{
+        column-count: 2;
+    }
+
+    .pagination{
+        display: flex;
+        justify-content: center;
+    }
+
+
+
+</style>
+
+
+<div class="headers-container">
+    <div>
+        <h3>Posiłki</h3>
+    </div>
+
+    <div class="value">
+        <h3>Przepisy</h3>
+        <p>Ilość przepisów: {{ count }}</p>
+        <h3 class="create-recipe"><a href="{% url 'create-recipe' %}">Dodaj swój przepis</a></h3>
+    </div>
+
+    <div>
+        <h3>Ostatnia aktywność</h3>
+    </div>
+</div>
+
+<div class="home-container">
+
+    <div>
+
+        <strong><a href="{% url 'home' %}">Wszystkie</a></strong>
+
+        {% for meal in meals %}
+        <div class="meal-container">
+            <a href="{% url 'home' %}?search={{meal.name}}"><p class="meal">{{ meal.name }}</p></a>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="recipes">
+        <br>
+        <div class="recipes-container">
+            {% for recipe in page_obj %}
+                <div class="recipe-main-container" id="recipe-{{ recipe.id }}">
+                        <div class="recipe-container">
+                            <div class="user-container">
+                                <img class="profile-pic", src="{{ recipe.host.profile.image.url }}" alt="">
+                                <p class="recipe-author"><a href="{% url 'profile' recipe.host.username %}">@{{ recipe.host.username }}</a></p> 
+                            </div>
+                            <div></div>
+                            <div class="recipe-time">
+                                <small>{{ recipe.created|timesince }} temu</small>
+                            </div>
+                        </div>
+                    <br>
+                        <div class="recipe">
+                            <h2 class="recipe-title"><a href="{% url 'recipe' recipe.id %}">{{ recipe.title }}</a></h2>
+                            <p>{{ recipe.description|truncatewords:10 }}</p>
+                            <br>
+                            {% for ingredient in ingredients %}
+                            {% if ingredient.recipe_id == recipe.id %}
+                                <small>{{ ingredient.product }}</small>
+                            {% endif %}
+                            {% endfor %}
+                            <hr>
+                            <small>{{ recipe.participants.count }} osób skomentowało</small>
+                            <br>
+                            <br>
+                        </div>
+                </div>
+                    <br>
+            {% endfor %}
+        </div>
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; Pierwsza</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">Poprzednia</a>
+                {% endif %}
+        
+                <span class="current">
+                    Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}.
+                </span>
+        
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">Następna</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">Ostatnia &raquo;</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
+    <div>
+
+        {% for comment in comments %}
+        <div>
+            <small><a href="{% url 'profile' comment.user.username %}">@{{ comment.user }}</a>  {{ comment.created | timesince }} - <a href="{% url 'recipe' comment.recipe.id %}">{{ comment.recipe }}</a></small>
+            <p>{{ comment.body }}</p>
+        </div>
+        <hr>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+{% endblock content %}
