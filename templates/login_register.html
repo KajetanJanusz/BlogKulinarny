@@ -1,25 +1,80 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<style>
+    body{
+        overflow: hidden;
+    }
+
+    .login, .register{
+        border: 1px solid #ffffff;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+        border-radius: 30px;
+        font-size: large;
+    }
+
+    .login input{
+        display: block;
+        margin-bottom: 15px;
+    }
+
+    input[type=submit]{
+        position: relative;
+        color: #ffffff;
+        left: 50%;
+        top: 30px;
+        background-color: black;
+        transform: translate(-50%, -50%);
+        margin-top: 20px;
+        border: 1px solid #fff;
+        border-radius: 6px;
+        padding: 10px;
+        cursor: pointer;
+        transition: .5s;
+    }
+
+    input[type=submit]:hover{
+        background-color: #ffffff;
+        color: black;
+    }
+
+    .field{
+        padding-bottom: 10px;
+    }
+
+
+
+
+</style>
+
 {% if page == 'login' %}
-    <div>
+    <div class="login">
         <form method="POST" action="">
             {% csrf_token %}
 
             <label>Nazwa użytkownika:</label>
-            <input type="text" name="username" placeholder="Wpisz nazwę" />
+            <input type="text" name="username"/>
             
             <label>Hasło:</label>
-            <input type="password" name="password" placeholder="Wpisz hasło" />
+            <input type="password" name="password" />
 
             <input type="submit" value="Zaloguj"/>
         </form>
     </div>
 {% else %}
-    <div>
+    <div class="register">
         <form method="POST" action="">
             {% csrf_token %}
-            {{ form.as_p}}
+            <div class="field"><p>Nazwa uzytkownika:</p>{{ form.username }}</div>
+            <div class="field"><p>Hasło:</p>{{ form.username }}</div>
+            <div class="field"><p>Powtórz hasło:</p>{{ form.username }}</div>
             <input type="submit" value="Zarejestruj się"/>
         </form>
     </div>

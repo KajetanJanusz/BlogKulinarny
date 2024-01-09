@@ -4,6 +4,6 @@
 <h1>Przelicznik</h1>
 
 <h3>{{ product.name }}:</h3>
-<p>Łyżek: {{ request.POST.spoons }} = {{ output }} {% if product.unit == 'mililitr' %}mililitrów{% else %}gramów{% endif %}</p>
+<p>Łyżek: {{ request.POST.spoons }} = {{ output }} {{ product.unit }}</p>
 
 {% endblock content %}

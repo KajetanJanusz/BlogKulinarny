@@ -18,10 +18,36 @@
         margin-right: 50px;
     }
 
-    .links-container div {
+    .links-container a {
+        position: relative;
         display: inline-block;
-        padding-left: 20px;        
+        margin-left: 10px;        
     }
+
+    .links-container a::after{
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        width: 100%;
+        height: 2px;
+        background: #fff;
+        border-radius: 5px;
+        transform: scaleX(0);
+        transition: transform .5s;
+    }
+
+    .links-container a:hover::after{
+        transform: scaleX(1)
+    }
+
+
+
+    body{
+        margin: 8px;
+    }
+
+
 </style>
 
 <head>
@@ -35,41 +61,24 @@
 
 <body>
     <header>
-    <div style="width: 400px;">
+    <div style="width: 200px;">
         <h1 class="title"><a href="{% url 'home' %}">Gotować każdy może</a></h1>
         <form method="GET" action="{% url 'home' %}">
-            <input type="text" name="search" placeholder="Wyszukaj..."/>
+            <input style="color: #fff;" type="text" name="search" placeholder="Wyszukaj..."/>
         </form>
     </div>
     <div class="links-container">
         {% if request.user.is_authenticated %}
-        <div>
-            <a href="{% url 'logout' %}">Wyloguj się &nbsp;</a>
-        </div>
-        <div>
+            <a href="{% url 'logout' %}">Wyloguj się</a>
             <a href="{% url 'profile' request.user.username %}">Profil</a>
-        </div>
         {% else %}
-        <div>
             <a href="{% url 'login' %}">Zaloguj się</a>
-        </div>
-        <div>
             <a href="{% url 'register' %}">Zarejestruj się</a>
-        </div>
         {% endif %}
-        <div>
             <a href="{% url 'own-ingredients' %}">Przepisy z mojej lodówki</a>
-        </div>
-        <div>
             <a href="{% url 'conversion-factor' %}">Przelicznik</a>
-        </div>
     </div>
     </header>
-
-    <hr>
-
-    
-
 
     <div class="content-container">
         {% if messages %}

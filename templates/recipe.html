@@ -35,7 +35,7 @@
 
             <strong>Składniki:</strong>
             {% for ingredient in ingredients %}</p>
-                <p>{{ ingredient.product }}: {{ ingredient.weight }} {{ ingredient.product.unit }}ów</p>
+                <p>{{ ingredient.product }}: {{ ingredient.weight }} {{ ingredient.product.unit }}</p>
             {% endfor %}
             <br>
             <strong class="description">Przygotowanie:</strong>
@@ -64,7 +64,6 @@
                 <p>Brak komentarzy. Napisz jako pierwszy!</p>
                 {% endif %}
             </div>
-            <hr>
             <div>&nbsp;</div>
             {% if request.user.is_authenticated %}
                 <form method="POST" enctype="multipart/form-data">
@@ -91,7 +90,7 @@
         <div>
             <h3>Komentujący</h3>
             {% for participant in participants %}
-            <p>@{{ participant.username }}</p>
+            <a href="{% url 'profile' participant.username %}">@{{ participant.username }}</a>
             {% endfor %}
         </div>
 

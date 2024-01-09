@@ -2,9 +2,13 @@
 {% load static %}
 {% block content %}
 
-<h1>Co masz w lodówce?</h1>
+
+
+
+
 
 <form id="form-container" method="POST">
+    <h1>Co masz w lodówce?</h1>
     {% csrf_token %}
     {{ formset.management_form }}
     {% for form in formset %}
